@@ -18,16 +18,16 @@ plot(discoveries)
 ```
 ## Exercice 1
 **1.** On cherche un estimateur $\hat{\theta}$ du jeu de donnees decrit par une loi geometrique. 
-La densite de probabilite est donnee par $ p(x, \theta) = \prod \theta (1-\theta)^{x_i} $ 
-En prenant la log-vraisemblance on obtient $ log(p(x,\theta)) = nlog(\theta) + \sum_{i=1}^{n} x_ilog(1-\theta) $
-$ \frac{\delta log(p(x,\theta))}{\delta \theta} = \frac{n}{\theta} - \frac{1}{1-\theta} \sum_{i=1}^{n} x_i = 0 $
-En annulant la derivee de cette expression par rapport à $\theta$, on obtient $ \hat{\theta} = \frac{1}{1+\sum_{i=1}^{n} x_i} $
+La densite de probabilite est donnee par $p(x, \theta) = \prod \theta (1-\theta)^{x_i}$ 
+En prenant la log-vraisemblance on obtient $log(p(x,\theta)) = nlog(\theta) + \sum_{i=1}^{n} x_ilog(1-\theta)$
+$\frac{\delta log(p(x,\theta))}{\delta \theta} = \frac{n}{\theta} - \frac{1}{1-\theta} \sum_{i=1}^{n} x_i = 0$
+En annulant la derivee de cette expression par rapport à $\theta$, on obtient $\hat{\theta} = \frac{1}{1+\sum_{i=1}^{n} x_i}$
 
 **2.** Dans le cas d'une loi de Poisson ou le parametre inconnu est $\lambda$, on trouve l'expression de $\hat{\lambda}$  en passant par la log-vraisemblance : 
 $log(p(x, \lambda )) =  \sum_{} x_i log( \lambda ) -n\lambda - \sum_{} log(x_i !)$
 En annulant la dérivée par rapport à $\lambda$ on obtient : 
-$ \frac{1}{\lambda} \sum{} x_i - n = 0 $ 
-$ \hat{\lambda} = \frac{1}{n} \sum_{i=1}^{n} x_i $
+$\frac{1}{\lambda} \sum{} x_i - n = 0$ 
+$\hat{\lambda} = \frac{1}{n} \sum_{i=1}^{n} x_i$
 ```{r}
 #calcul de la moyenne et de la variance empirique du jeu de donnees
 m = mean (discoveries)
@@ -62,24 +62,26 @@ print(lambda)
 ```
 **3.**D'apres les resultats ci-dessus, la loi geometrique donne des resultats moins satisfaisants que la loi de Poisson. Le modele de Poisson est donc plus adapte. 
 
-**4.** A FAIRE !!!!!!!!!!
+**4.** D'apres les resultats ci-dessous, on observe que la courbe de la densite geometrique se rapproche le plus de l'histogramme des valeurs empiriques. La premiere impression est donc infirmee. 
 ```{r}
-plot(dgeom(discoveries, prob = theta, log=TRUE), main = 'densite geometrique', col='blue')
-lines(dpois(discoveries, lambda, log = TRUE), main = 'densite de Poisson', col='red')
-lines(hist(discoveries, probability = TRUE))
+#d<- density(discoveries)
+#View(discoveries)
+x = discoveries
+plot(x, dgeom(discoveries, prob = theta, log=FALSE), main = 'densite geometrique', col='blue')
+plot(x, dpois(discoveries, lambda, log = FALSE), main = 'densite de Poisson', col='red')
+hist(discoveries, probability = TRUE)
+#lines(d, col='black')
+
 #plot(x,y1,type="l",col="red")
 #lines(x,y2,col="green")
 ```
 
 
-loi_geom <- function(theta, x) theta*(1-theta)**x
 
-```
-
-D'ou : $ \theta = \frac{1}{n} \sum{} x_i $
 ```{r}
 library(ggplot2)
-head(discoveries)
-
+x<-discoveries
+plot(x, qgeom(discoveries, theta), main='quantile inverse geom', col='blue')
+plot(x, qpois(discoveries, lambda), main='poisson', col='blue')
 ```
 
