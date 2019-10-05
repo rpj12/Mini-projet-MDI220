@@ -1,0 +1,85 @@
+---
+title: "Mini-projet MDI 220 Ruila Puskas-Juhasz"
+output:
+  html_notebook: default
+  pdf_document: default
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
+```{r}
+data("discoveries")
+plot(discoveries)
+```
+## Exercice 1
+**1.** On cherche un estimateur $\hat{\theta}$ du jeu de donnees decrit par une loi geometrique. 
+La densite de probabilite est donnee par $ p(x, \theta) = \prod \theta (1-\theta)^{x_i} $ 
+En prenant la log-vraisemblance on obtient $ log(p(x,\theta)) = nlog(\theta) + \sum_{i=1}^{n} x_ilog(1-\theta) $
+$ \frac{\delta log(p(x,\theta))}{\delta \theta} = \frac{n}{\theta} - \frac{1}{1-\theta} \sum_{i=1}^{n} x_i = 0 $
+En annulant la derivee de cette expression par rapport à $\theta$, on obtient $ \hat{\theta} = \frac{1}{1+\sum_{i=1}^{n} x_i} $
+
+**2.** Dans le cas d'une loi de Poisson ou le parametre inconnu est $\lambda$, on trouve l'expression de $\hat{\lambda}$  en passant par la log-vraisemblance : 
+$log(p(x, \lambda )) =  \sum_{} x_i log( \lambda ) -n\lambda - \sum_{} log(x_i !)$
+En annulant la dérivée par rapport à $\lambda$ on obtient : 
+$ \frac{1}{\lambda} \sum{} x_i - n = 0 $ 
+$ \hat{\lambda} = \frac{1}{n} \sum_{i=1}^{n} x_i $
+```{r}
+#calcul de la moyenne et de la variance empirique du jeu de donnees
+m = mean (discoveries)
+v = var (discoveries)
+print("moyenne empirique=")
+print(m)
+print("variance empirique=")
+print(v)
+
+#calcul à partir de l'estimateur de la loi géomtrique
+n = length(discoveries)
+S = 0 
+for (i in (1:n)) {
+  S <- S + discoveries[i]
+}
+
+theta = 1/((1/n)*S +1)
+moy_geom = (1/n)*S + 1 ##1/theta
+var_geom = (1-theta)/(theta**2)
+print ('moyenne geometrique=')
+print(moy_geom)
+print('variance geometrique=')
+print(var_geom)
+
+#calcul à partir de l'estimateur de la loi de Poisson
+lambda = (1/n)*S
+moy_poisson = lambda
+var_poisson = lambda
+print('moyenne et variance de Poisson = ')  
+print(lambda)
+
+```
+**3.**D'apres les resultats ci-dessus, la loi geometrique donne des resultats moins satisfaisants que la loi de Poisson. Le modele de Poisson est donc plus adapte. 
+
+**4.** A FAIRE !!!!!!!!!!
+```{r}
+plot(dgeom(discoveries, prob = theta, log=TRUE), main = 'densite geometrique', col='blue')
+lines(dpois(discoveries, lambda, log = TRUE), main = 'densite de Poisson', col='red')
+lines(hist(discoveries, probability = TRUE))
+#plot(x,y1,type="l",col="red")
+#lines(x,y2,col="green")
+```
+
+
+loi_geom <- function(theta, x) theta*(1-theta)**x
+
+```
+
+D'ou : $ \theta = \frac{1}{n} \sum{} x_i $
+```{r}
+library(ggplot2)
+head(discoveries)
+
+```
+
