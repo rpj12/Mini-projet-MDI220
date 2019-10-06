@@ -80,8 +80,53 @@ hist(discoveries, probability = TRUE)
 
 ```{r}
 library(ggplot2)
-x<-discoveries
-plot(x, qgeom(discoveries, theta), main='quantile inverse geom', col='blue')
-plot(x, qpois(discoveries, lambda), main='poisson', col='blue')
+#x<-discoveries
+#plot(x, qgeom(discoveries, theta), main='quantile inverse geom', col='blue')
+#plot(x, qpois(discoveries, lambda), main='poisson', col='blue')
+##attention aux invalid prob
+
+#theta
+#discoveries
+#x<- sort(discoveries, decreasing = FALSE)
+quantile_geom <- qgeom(discoveries, theta, lower.tail = TRUE, log.p = FALSE)
+
+#plot(discoveries[i], quantile_geom[i/(n+1)], main = 'qq plot')
+
+
+#1er quantile : i = 1
+n <- length(discoveries)
+summary(discoveries)
+
+frst_quant <- summary(discoveries)[2]
+thrd_quant <- summary(discoveries)[5]
+
+x <- array(frst_quant, thrd_quant)
+#y <- probleme 
+plot(x, )
+
+```
+```{r}
+##Utilisation de la fonction qqplot
+#preparation des données
+discoveries <- as.factor(discoveries)
+head(discoveries)
+a<-rgeom(n, theta)
+b<-rpois(n, lambda)
+qqplot(a, discoveries, main= 'qqplot loi géométrique et discoveries', col='blue')
+qqline(a)
+qqplot(b, discoveries, main= 'qqplot loi de Poisson et discoveries', col='red')
+qqline(b)
+```
+**5.** La courbe de Henry de la distribution de Poisson convient le mieux. 
+```{r}
+c<-rchisq(n, 6, ncp=0.05)
+
+qqplot(c, a)
+qqline(a)
+qqplot(c,b)
+qqline(b)
+#qqline(a, col='red')
+#qqline(b, col='blue')
+#qqline(c, col='grey')
 ```
 
