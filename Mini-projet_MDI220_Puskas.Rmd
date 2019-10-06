@@ -20,7 +20,7 @@ plot(discoveries)
 **1.** On cherche un estimateur $\hat{\theta}$ du jeu de donnees decrit par une loi geometrique. 
 La densite de probabilite est donnee par $p(x, \theta) = \prod \theta (1-\theta)^{x_i}$ 
 En prenant la log-vraisemblance on obtient $log(p(x,\theta)) = nlog(\theta) + \sum_{i=1}^{n} x_ilog(1-\theta)$
-$\frac{\delta log(p(x,\theta))}{\delta \theta} = \frac{n}{\theta} - \frac{1}{1-\theta} \sum_{i=1}^{n} x_i = 0$
+$\frac{\partial log(p(x,\theta))}{\partial \theta} = \frac{n}{\theta} - \frac{1}{1-\theta} \sum_{i=1}^{n} x_i = 0$
 En annulant la derivee de cette expression par rapport à $\theta$, on obtient $\hat{\theta} = \frac{1}{1+\sum_{i=1}^{n} x_i}$
 
 **2.** Dans le cas d'une loi de Poisson ou le parametre inconnu est $\lambda$, on trouve l'expression de $\hat{\lambda}$  en passant par la log-vraisemblance : 
@@ -129,4 +129,13 @@ qqline(b)
 #qqline(b, col='blue')
 #qqline(c, col='grey')
 ```
+**6.** Le modele qui convient le mieux est le modele de Poisson. 
 
+## Exercice 2 : Analyse de l'incertitude dans le modele de Poisson
+**1.** Les $(X_i)$ sont independantes et identiquement distribuees, suivant une loi de Poisson de parametre $\lambda$. Par addivite de la loi de Poisson, la variable aleatoire $(\sum{X_i})$ suit une loi de Poisson de parametre $n\lambda$. 
+On pose $Y=\sum_{i=1}^{n}X_i$
+Alors : $\forall s\ge1,  P(Y\ge s) = \sum_{k=s}^{+infty} P(Y=k) = \sum_{k=s}^{+infty} \mathrm{e}^{-n\lambda} \frac{(n \lambda)^k }{k!} $
+En derivant terme a terme, on obtient : $\frac{\partial P(Y\ge s)}{\partial \lambda}=\sum_{k=s}^{+infty} \mathrm{e}^{-n\lambda} (-\frac{n^{k+1} \lambda^k}{k!} + \frac{n^k \lambda^{k-1}}{(k-1)!} )$
+Il s'agit d'une serie entiere ayant pour terme general la difference de deux termes consecutifs. Ainsi, il vient :
+$\frac{\partial P(Y\ge s)}{\partial \lambda}=\mathrm{e}^{-n\lambda} \frac{n^s \lambda^{s-1}}{(s-1)!} \ge 0$
+Donc la fonction est croissante. 
