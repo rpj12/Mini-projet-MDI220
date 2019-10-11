@@ -66,10 +66,11 @@ print(lambda)
 ```{r}
 #d<- density(discoveries)
 #View(discoveries)
-x = discoveries
-plot(x, dgeom(discoveries, prob = theta, log=FALSE), main = 'densite geometrique', col='blue')
-plot(x, dpois(discoveries, lambda, log = FALSE), main = 'densite de Poisson', col='red')
-hist(discoveries, probability = TRUE)
+x = 0:12
+hist(discoveries, probability = TRUE, breaks = 12)
+lines(x, dgeom(x, prob = theta, log=FALSE), main = 'densite geometrique', col='blue')
+lines(x, dpois(x, lambda, log = FALSE), main = 'densite de Poisson', col='red')
+
 #lines(d, col='black')
 
 #plot(x,y1,type="l",col="red")
