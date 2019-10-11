@@ -78,6 +78,21 @@ lines(x, dpois(x, lambda, log = FALSE), main = 'densite de Poisson', col='red')
 ```
 
 
+**5.** La courbe de Henry de la distribution de Poisson convient le mieux. 
+```{r}
+#library(discovery)
+y <- rchisq(n, df = 6)
+## QQPlot pour la loi du Chi^2 comparée à la ditribution de Poisson:
+qqplot(qchisq(ppoints(n), df = 6), y, main = expression("Q-Q plot for" ~~ {chi^2}[nu == 6]))
+
+# Pour rajouter la ligne de modélisation 
+library(ggplot2)
+y = qpois(x, lambda)
+p = 0.05
+ggplot2::last_plot() + qqline(y, distribution = function(p) qchisq(p, df = 6), prob = c(0.1, 0.6), col = 2)
+##y doit être la loi de poisson
+
+```
 
 ```{r}
 library(ggplot2)
@@ -118,7 +133,7 @@ qqline(a)
 qqplot(b, discoveries, main= 'qqplot loi de Poisson et discoveries', col='red')
 qqline(b)
 ```
-**5.** La courbe de Henry de la distribution de Poisson convient le mieux. 
+**6.** Le modele qui convient le mieux est le modele de Poisson. 
 ```{r}
 c<-rchisq(n, 6, ncp=0.05)
 
@@ -130,7 +145,7 @@ qqline(b)
 #qqline(b, col='blue')
 #qqline(c, col='grey')
 ```
-**6.** Le modele qui convient le mieux est le modele de Poisson. 
+
 
 ## Exercice 2 : Analyse de l'incertitude dans le modele de Poisson
 **1.** Les $(X_i)$ sont independantes et identiquement distribuees, suivant une loi de Poisson de parametre $\lambda$. Par addivite de la loi de Poisson, la variable aleatoire $(\sum{X_i})$ suit une loi de Poisson de parametre $n\lambda$. 
