@@ -165,18 +165,28 @@ $\frac{\partial P(Y\ge s)}{\partial \lambda}=\mathrm{e}^{-n\lambda} \frac{n^s \l
 Donc la fonction est croissante. 
 
 **2.** On en déduit un test de de l'hypothèse nulle. 
+On utilise le rapport de vraisemblance monotone, pour cela verifions que la fonction de vraisemblance est strictement croisssante $Z(x) = \frac{p_{\theta_2}(x)}{p_{\theta_1}(x)} = \prod_{k=1}^{n} (\frac{\theta_2}{\theta_1})^{x_i} \exp(-n(\theta_2 - \theta_1))$ 
+$\Leftrightarrow Z(x) = \exp(-n(\theta_2 - \theta_1) + log(\frac{\theta_2}{\theta_1}) \sum_{k=1}^{n} x_i) = \exp(-n(\theta_2 - \theta_1) + log(\frac{\theta_2}{\theta_1}) T)$
+Or on a pris $\theta_1 < \theta_2$ donc $log(\frac{\theta_2}{\theta_1}) > 0$. 
+Ainsi : la fonction $T \longmapsto \frac{p_{\theta_2}}{p_{\theta_1}}$ est strictement croissante. 
+
+T suit une loi de Poisson de parametre $n\lambda$. Sous l'hypothese nulle : $\lambda = 3$. 
+
 On a le test suivant : $H_0 : \lambda \le 3$ et $H_1 : \lambda > 3$ avec $\alpha \le 0.05$.
 On rappelle que le modele est $\theta_0 = \lbrack 0,3 \rbrack$ et $\theta_1 = \rbrack 3, + \infty\lbrack$. Il s'agit de determiner un zone de rejet telle que, sous l'hypothese nulle, la probabilité que X appartienne à cette zone $X_1$ soit inférieure ou egale a $5/100$. On s'interesse à la statistique $\delta (T) = \mathbb{1} {T>s}$. 
+
 On exprime le risque de premiere espece : $R(\theta_0 , \delta) = \alpha = P(\delta(T) = 1) \le 0.05$
 $\Leftrightarrow \alpha = P(T > s) \Leftrightarrow \alpha = 1-P(T\le s) \Leftrightarrow P(T\le s) = 1- \alpha$
-On retrouve l'expression de la fonction de répartition de T, dont la reciproque s'exprime comme le premier quantile $q_1$. D'ou : $s = q_1(1-\alpha)$. 
-T suit une loi de Poisson de parametre $n\lambda$.
-On utilise le rapport de vraisemblance monotone, pour cela verifions que la fonction de vraisemblance est strictement croisssante : $Z(x) = \frac{p_ \lambda_2 (x)} / {p_\lambda_1 (x)$  
+On retrouve l'expression de la fonction de répartition de T, dont la reciproque s'exprime comme le quantile $q_1$ associe a la loi $P(3n)$. D'ou : $s = q_1(1-\alpha)$. 
+
+ 
 ```{r}
 alpha = 0.05
 print("s = ")
 qpois(alpha, n*lambda)
 ```
+
+
 **3.** En calculant la probabilité que T soit egal a 281 et en appliquant la croissance de la fonction, on obtient que le risque de premiere espece est nul. Donc on accepte $H_0$. 
 ```{r}
 #calcul de la probabilite que T = 281
@@ -189,3 +199,16 @@ m <- mean(discoveries)
 
 ```
 
+
+**4.** On considere cette fois la moyenne empirique m de discoveries. Soit $n_0$ le nombre minimum de donnees necessaires pour pouvoir rejeter $H_0$. 
+Pour rejeter le test, il faut : $T(X) > s$, donc : $\sum_{i=1}^{n}X_i > s \Leftrightarrow nm > s$.
+Finalement : $n_0 = \lfloor \frac{s}{m} \rfloor +1$. 
+```{r}
+print(floor(281/m)+1)
+```
+Application numérique : il faut au moins 91 donnees pour rejeter HO. 
+
+**5.** La fonction puissance est donnee par : $\beta(\theta, \delta) = 1- R(\theta, \delta)$ pour $\theta \in \theta_1$. R est ici le risque de premiere espece (rejeter a tort $H_0$). On trace $\beta$ en fonction de $\lambda$. 
+```{r}
+
+```
