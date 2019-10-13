@@ -32,9 +32,10 @@ $\hat{\lambda} = \frac{1}{n} \sum_{i=1}^{n} x_i$
 #calcul de la moyenne et de la variance empirique du jeu de donnees
 m = mean (discoveries)
 v = var (discoveries)
-print("moyenne empirique=")
+print("moyenne empirique")
 print(m)
-print("variance empirique=")
+
+print("variance empirique")
 print(v)
 
 #calcul à partir de l'estimateur de la loi géomtrique
@@ -47,9 +48,11 @@ for (i in (1:n)) {
 theta = 1/((1/n)*S +1)
 moy_geom = (1/n)*S + 1 ##1/theta
 var_geom = (1-theta)/(theta**2)
-print ('moyenne geometrique=')
+
+print ('moyenne geometrique')
 print(moy_geom)
-print('variance geometrique=')
+
+print('variance geometrique')
 print(var_geom)
 
 #calcul à partir de l'estimateur de la loi de Poisson
@@ -61,27 +64,32 @@ print(lambda)
 
 ```
 **3.**D'apres les resultats ci-dessus, la loi geometrique donne des resultats moins satisfaisants que la loi de Poisson. Le modele de Poisson est donc plus adapte. 
+```{r}
+print(m/moy_geom)
+print(v/var_geom)
+
+print(m/moy_poisson)
+print(v/var_poisson)
+
+print("les valeurs obtenues par la loi de Poisson sont plus proches des valeurs empiriques. La loi de Poisson approche le mieux la statistique consideree.")
+```
+
 
 **4.** D'apres les resultats ci-dessous, on observe que la courbe de la densite geometrique se rapproche le plus de l'histogramme des valeurs empiriques. La premiere impression est donc infirmee. 
+Bleu : densite geometrique
+Rouge : densite de Poisson
 ```{r}
-#d<- density(discoveries)
-#View(discoveries)
 x = 0:12
 hist(discoveries, probability = TRUE, breaks = 12)
 lines(x, dgeom(x, prob = theta, log=FALSE), main = 'densite geometrique', col='blue')
 lines(x, dpois(x, lambda, log = FALSE), main = 'densite de Poisson', col='red')
-
-#lines(d, col='black')
-
-#plot(x,y1,type="l",col="red")
-#lines(x,y2,col="green")
 ```
 
 
 **5.** La courbe de Henry de la distribution de Poisson convient le mieux. 
 ```{r}
 #library(discovery)
-y <- rchisq(n, df = 6)
+y <- rpois(n, lambda)
 ## QQPlot pour la loi du Chi^2 comparée à la ditribution de Poisson:
 qqplot(qchisq(ppoints(n), df = 6), y, main = expression("Q-Q plot for" ~~ {chi^2}[nu == 6]))
 
@@ -89,7 +97,7 @@ qqplot(qchisq(ppoints(n), df = 6), y, main = expression("Q-Q plot for" ~~ {chi^2
 library(ggplot2)
 y = qpois(x, lambda)
 p = 0.05
-ggplot2::last_plot() + qqline(y, distribution = function(p) qchisq(p, df = 6), prob = c(0.1, 0.6), col = 2)
+#ggplot2::last_plot() + qqline(y, distribution = function(p) qchisq(p, df = 6), prob = c(0.25, 0.75), col = 2)
 ##y doit être la loi de poisson
 
 ```
