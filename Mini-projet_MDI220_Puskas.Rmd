@@ -126,7 +126,7 @@ thrd_quant <- summary(discoveries)[5]
 
 x <- array(frst_quant, thrd_quant)
 #y <- probleme 
-plot(x, )
+#plot(x, )
 
 ```
 ```{r}
@@ -146,9 +146,9 @@ qqline(b)
 c<-rchisq(n, 6, ncp=0.05)
 
 qqplot(c, a)
-qqline(a)
+#qqline(0.5*a-2.5, col='red')
 qqplot(c,b)
-qqline(b)
+#qqline(0.25*b-1.5, col='blue')
 #qqline(a, col='red')
 #qqline(b, col='blue')
 #qqline(c, col='grey')
@@ -163,3 +163,29 @@ En derivant terme a terme, on obtient : $\frac{\partial P(Y\ge s)}{\partial \lam
 Il s'agit d'une serie entiere ayant pour terme general la difference de deux termes consecutifs. Ainsi, il vient :
 $\frac{\partial P(Y\ge s)}{\partial \lambda}=\mathrm{e}^{-n\lambda} \frac{n^s \lambda^{s-1}}{(s-1)!} \ge 0$
 Donc la fonction est croissante. 
+
+**2.** On en déduit un test de de l'hypothèse nulle. 
+On a le test suivant : $H_0 : \lambda \le 3$ et $H_1 : \lambda > 3$ avec $\alpha \le 0.05$.
+On rappelle que le modele est $\theta_0 = \lbrack 0,3 \rbrack$ et $\theta_1 = \rbrack 3, + \infty\lbrack$. Il s'agit de determiner un zone de rejet telle que, sous l'hypothese nulle, la probabilité que X appartienne à cette zone $X_1$ soit inférieure ou egale a $5/100$. On s'interesse à la statistique $\delta (T) = \mathbb{1} {T>s}$. 
+On exprime le risque de premiere espece : $R(\theta_0 , \delta) = \alpha = P(\delta(T) = 1) \le 0.05$
+$\Leftrightarrow \alpha = P(T > s) \Leftrightarrow \alpha = 1-P(T\le s) \Leftrightarrow P(T\le s) = 1- \alpha$
+On retrouve l'expression de la fonction de répartition de T, dont la reciproque s'exprime comme le premier quantile $q_1$. D'ou : $s = q_1(1-\alpha)$. 
+T suit une loi de Poisson de parametre $n\lambda$.
+On utilise le rapport de vraisemblance monotone, pour cela verifions que la fonction de vraisemblance est strictement croisssante : $Z(x) = \frac{p_ \lambda_2 (x)} / {p_\lambda_1 (x)$  
+```{r}
+alpha = 0.05
+print("s = ")
+qpois(alpha, n*lambda)
+```
+**3.** En calculant la probabilité que T soit egal a 281 et en appliquant la croissance de la fonction, on obtient que le risque de premiere espece est nul. Donc on accepte $H_0$. 
+```{r}
+#calcul de la probabilite que T = 281
+k <- 281
+res <- lambda**(-k)*exp(-lambda)/factorial(k)
+print(res)
+```
+```{r}
+m <- mean(discoveries)
+
+```
+
