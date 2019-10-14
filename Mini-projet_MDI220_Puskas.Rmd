@@ -5,13 +5,6 @@ output:
   pdf_document: default
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
 ```{r}
 data("discoveries")
 plot(discoveries)
@@ -74,7 +67,7 @@ print("les valeurs obtenues par la loi de Poisson sont plus proches des valeurs 
 ```
 
 
-**4.** D'apres les resultats ci-dessous, on observe que la courbe de la densite geometrique se rapproche le plus de l'histogramme des valeurs empiriques. La premiere impression est donc infirmee. 
+**4.** D'apres les resultats ci-dessous, on observe que la courbe de la densite de Poisson se rapproche le plus de l'histogramme des valeurs empiriques puisqu'elle en reprend la même forme mais avec un décalage vers la droite. La premiere impression est donc confirmée 
 Bleu : densite geometrique
 Rouge : densite de Poisson
 ```{r}
@@ -88,31 +81,21 @@ lines(x, dpois(x, lambda, log = FALSE), main = 'densite de Poisson', col='red')
 **5.** La courbe de Henry de la distribution de Poisson convient le mieux. 
 
 ```{r}
-##########QUESTION 5###########
 ##Utilisation de la fonction qqplot
 #preparation des données
-discoveries <- as.factor(discoveries)
-head(discoveries)
+
 a<-rgeom(500, theta)
 b<-rpois(500, lambda)
+
+
 qqplot( a,discoveries, main= 'qqplot loi géométrique et discoveries', col='blue', ylim = range(0:13))
 lines(0:13,0:13)
+
 qqplot(b, discoveries, main= 'qqplot loi de Poisson et discoveries', col='red', ylim = range(0:13))
 lines(0:13,0:13)
 ```
-**6.** Le modele qui convient le mieux est le modele de Poisson. 
-```{r}
-
-##########A SUPPRIMER###################
-# Pour rajouter la ligne de modélisation 
-library(ggplot2)
-yy = qpois(x, lambda)
-p = 0.05
-#ggplot2::last_plot() + qqline(y, distribution = function(p) qchisq(p, df = 6), prob = c(0.25, 0.75), col = 2)
-##y doit être la loi de poisson
-
-```
 **6.** Comparaison avec la loi du Chi^2 
+Le modele qui convient le mieux est le modele de Poisson. 
 ```{r}
 #c<-rchisq(2000, df = 5, ncp=0.05)
 c<-qchisq(ppoints(2000), df = 5)
@@ -171,6 +154,7 @@ Finalement : $n_0 = \lfloor \frac{s}{m} \rfloor +1$.
 # rappels : m=mean(discoveries)=3.1
 print(floor(281/3.1)+1)
 ```
+
 
 Application numérique : il faut au moins 91 donnees pour rejeter HO. 
 
