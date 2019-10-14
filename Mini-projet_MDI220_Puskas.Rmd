@@ -221,6 +221,15 @@ Donc $\pi(\lambda / x) \propto (\lambda ^{k-1} e^{-\frac{\lambda}{\theta}}) \pro
 Ainsi : $\pi(\lambda / x) \propto \lambda^{\sum x_i} e^{-n\lambda} \lambda ^{k-1} e^{-\frac{\lambda}{\theta}} \Rightarrow \pi(\lambda / x) \propto \lambda^{\sum x_i+k-1} e^{-n\lambda-\frac{\lambda}{\theta}}$
 On identifie donc avec les parametres d'une loi Gamma : $(\sum_{i=1}^{n} x_i+k ; \frac{\theta}{n\theta+1}) = (k';\theta')$
 L'estimateur de l'esperance a posterio s'exprime comme : $ab = (\sum_{i=1}^{n} x_i+k)\frac{\theta}{n\theta+1}$
-L'estimateur du maximum de vraisemblance s'exprime comme : $ \hat\beta = \frac{\sum_{i=1}^{n} x_i}{nk'} = \frac{\sum_{i=1}^{n} x_i}{n\sum_{i=1}^{n} x_i+k}$
+L'estimateur du maximum de vraisemblance s'exprime comme : $\hat\beta = \frac{\sum_{i=1}^{n} x_i}{nk'} = \frac{\sum_{i=1}^{n} x_i}{n\sum_{i=1}^{n} x_i+k}$ pour estimer $\theta'$. Cependant, on ne connait pas $k$, cet estimateur ne nous permet donc pas d'estimer l'ensemble des parametres $k'$ et $\theta'$. 
+
+**3.** On obtient : 
+```{r}
+k_a_estimer <- sum(discoveries)+ 20
+theta_a_estimer <- 0.25/(n*0.25+1)
+print(theta_a_estimer)
+print(k_a_estimer)
+```
+
 
 
