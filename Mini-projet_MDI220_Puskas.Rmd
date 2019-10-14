@@ -213,7 +213,7 @@ Application numérique : il faut au moins 91 donnees pour rejeter HO.
 ## Exercice 3 (Analyse bayésienne)
 **1.** La distribution du prior conjugue d'une loi de Poisson est une distribution Gamma. 
 Donc $\lambda \hookrightarrow \Gamma(\theta, k)$. Alors $E(\lambda) = k\theta$ et $Var(\lambda) = k\theta^2$. 
-Or d'apres les donnees, il vient : $k=20$ et $\theta = 0.25$. 
+Or d'apres les donnees, il vient : $k=0.25$ et $\theta = 20$. 
 
 **2.** On calcule les expressions des parametres k et theta de la loi a posteriori $\pi$ en fonction de $x_{1:n}$ :
 $\pi(\lambda / x) = p_\lambda(x)\pi(\lambda) = \pi(\lambda) \prod_{i = 1}^{n} p_\lambda(x_i)$ puisque les $x_i$ sont indépendantes. 
@@ -222,11 +222,11 @@ Ainsi : $\pi(\lambda / x) \propto \lambda^{\sum x_i} e^{-n\lambda} \lambda ^{k-1
 On identifie donc avec les parametres d'une loi Gamma : $(\sum_{i=1}^{n} x_i+k ; \frac{\theta}{n\theta+1}) = (k';\theta')$
 L'estimateur de l'esperance a posterio s'exprime comme : $ab = (\sum_{i=1}^{n} x_i+k)\frac{\theta}{n\theta+1}$
 L'estimateur du maximum de vraisemblance s'exprime comme : $\hat\beta = \frac{\sum_{i=1}^{n} x_i}{nk'} = \frac{\sum_{i=1}^{n} x_i}{n\sum_{i=1}^{n} x_i+k}$ pour estimer $\theta'$. Cependant, on ne connait pas $k$, cet estimateur ne nous permet donc pas d'estimer l'ensemble des parametres $k'$ et $\theta'$. 
-
+EVM E(theta / x) = S/n en considérant 
 **3.** On obtient : 
 ```{r}
-k_a_estimer <- sum(discoveries)+ 20
-theta_a_estimer <- 0.25/(n*0.25+1)
+k_a_estimer <- sum(discoveries)+ 0.25
+theta_a_estimer <- 20/(n*20+1)
 print(theta_a_estimer)
 print(k_a_estimer)
 ```
