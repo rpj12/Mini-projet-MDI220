@@ -192,7 +192,7 @@ if (S_tilde<q) {
 ## Exercice 2 : Analyse de l'incertitude dans le modele de Poisson
 **1.** Les $(X_i)$ sont independantes et identiquement distribuees, suivant une loi de Poisson de parametre $\lambda$. Par addivite de la loi de Poisson, la variable aleatoire $(\sum{X_i})$ suit une loi de Poisson de parametre $n\lambda$. 
 On pose $Y=\sum_{i=1}^{n}X_i$
-Alors : $\forall s\ge1,  P(Y\ge s) = \sum_{k=s}^{+infty} P(Y=k) = \sum_{k=s}^{+infty} \mathrm{e}^{-n\lambda} \frac{(n \lambda)^k }{k!} $
+Alors : $\forall s\ge1,  P(Y\ge s) = \sum_{k=s}^{+infty} P(Y=k) = \sum_{k=s}^{+infty} \mathrm{e}^{-n\lambda} \frac{(n \lambda)^k }{k!}$
 En derivant terme a terme, on obtient : $\frac{\partial P(Y\ge s)}{\partial \lambda}=\sum_{k=s}^{+infty} \mathrm{e}^{-n\lambda} (-\frac{n^{k+1} \lambda^k}{k!} + \frac{n^k \lambda^{k-1}}{(k-1)!} )$
 Il s'agit d'une serie entiere ayant pour terme general la difference de deux termes consecutifs. Ainsi, il vient :
 $\frac{\partial P(Y\ge s)}{\partial \lambda}=\mathrm{e}^{-n\lambda} \frac{n^s \lambda^{s-1}}{(s-1)!} \ge 0$
@@ -216,6 +216,7 @@ On retrouve l'expression de la fonction de répartition de T, dont la reciproque
  
 ```{r}
 alpha = 0.05
+s<- qpois(1-alpha, n*3)
 print("s = ")
 qpois(1-alpha, n*3)
 ```
@@ -226,39 +227,44 @@ Pour rejeter le test, il faut : $T(X) > s$, donc : $\sum_{i=1}^{n}X_i > s \Leftr
 Finalement : $n_0 = \lfloor \frac{s}{m} \rfloor +1$.
 ```{r}
 # rappels : m=mean(discoveries)=3.1
-print(floor(281/3.1)+1)
+print(floor(329/3.1)+1)
 
 ```
 
 
-Application numérique : il faut au moins 91 donnees pour rejeter HO. 
+Application numérique : il faut au moins $n_0=107$ donnees pour rejeter $H_0$. 
 
 **5.** La fonction puissance est donnee par : $\beta(\theta, \delta) = 1- R(\theta, \delta)$ pour $\theta \in \theta_1$. R est ici le risque de premiere espece (rejeter a tort $H_0$). On trace $\beta$ en fonction de $\lambda$. 
 
 ```{r}
-######PLOT DE LA FONCTION PUISSANCE A CHANGER########
+######PLOT DE LA FONCTION PUISSANCE########
+j <- 1
+n<-100
+a <- seq(3,4,0.01)
+b <- seq(3,4,0.01)
+s<-qpois(0.95, 300)
 
-n=length(discoveries)
-lambda=seq(3,4,0.1)
-beta=numeric(length(lambda))
-
-for (i in (1:length(lambda)))  {
-  beta[i] = 1 - ppois(c,lambda[i]*n)
-}
-plot(lambda,beta,type="n", ylim = 0:12)
-lines(smooth.spline(lambda,beta),col="red")
-
-
-beta = 1 - ppois(c,3.5*n)
-nb=n
-
-while (beta<0.9) {
-  n=n+1
-  c=qpois(y,3*n)[95]
-  beta = 1 - ppois(c,3.5*n)
+for (k in a) {
+  b[j] <- 1 - ppois(s, n*k)
+  j = j+1
 }
 
-print(n)
+plot(a,b, type='l', main = 'Trace de la fonction puissance en fonction de lambda')
+
+```
+
+Comme le montre la cellule ci-dessous, il faut 112 donnees pour que $0.9\le \beta(\lambda = 3.5)$
+```{r}
+n_donnees <- 1
+beta_cible <- 1 - ppois(s, n_donnees*3.5)
+
+while (beta_cible<0.9) {
+  n_donnees = n_donnees +1
+  
+  beta_cible <- 1 - ppois(qpois(1-0.05, 3*n_donnees), n_donnees*3.5)
+}
+
+print(n_donnees)
 ```
 
 
@@ -281,46 +287,6 @@ k_a_estimer <- sum(discoveries)+ 0.25
 theta_a_estimer <- 20/(n*20+1)
 print(theta_a_estimer)
 print(k_a_estimer)
-```
-
-
-
-
-
-
-
-
-
-##### Brouillon
-```{r}
-```{r}
-################# INUTILISE ###########################
-library(ggplot2)
-#x<-discoveries
-#plot(x, qgeom(discoveries, theta), main='quantile inverse geom', col='blue')
-#plot(x, qpois(discoveries, lambda), main='poisson', col='blue')
-##attention aux invalid prob
-
-#theta
-#discoveries
-#x<- sort(discoveries, decreasing = FALSE)
-quantile_geom <- qgeom(discoveries, theta, lower.tail = TRUE, log.p = FALSE)
-
-#plot(discoveries[i], quantile_geom[i/(n+1)], main = 'qq plot')
-
-
-#1er quantile : i = 1
-n <- length(discoveries)
-summary(discoveries)
-
-frst_quant <- summary(discoveries)[2]
-thrd_quant <- summary(discoveries)[5]
-
-x <- array(frst_quant, thrd_quant)
-#y <- probleme 
-#plot(x, )
-
-```
 ```
 
 
