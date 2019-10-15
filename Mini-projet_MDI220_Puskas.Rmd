@@ -94,7 +94,7 @@ lines(0:13,0:13)
 qqplot(b, discoveries, main= 'qqplot loi de Poisson et discoveries', col='red', ylim = range(0:13))
 lines(0:13,0:13)
 ```
-**6.** Comparaison avec la loi du Chi^2 
+**6.** Comparaison avec la loi du Chi^2. Cette loi a cinq degrés de libertés puisque le partitionnement est de dimension 5.
 Le modele qui convient le mieux est le modele de Poisson. 
 ```{r}
 #c<-rchisq(2000, df = 5, ncp=0.05)
@@ -109,10 +109,84 @@ qqplot(c, a, main = expression("Q-Q plot loi geometrique et loi"~~ {chi^2}[nu ==
 lines(0:50, 0:50, col='black')
 
 ## QQPlot pour la loi du Chi^2 comparée à la ditribution de Poisson:
-qqplot(c,b,main = expression("Q-Q plot loi de Poisson et loi"~~ {chi^2}[nu == 5]), col='blue' )
+qqplot(c,b,main = expression("Q-Q plot loi de Poisson et loi"~~ {chi^2}[nu == 5]), col='blue')
 lines(0:25, 0:25, col='black')
 
 ```
+On observe sur les courbes ci-dessus que la loi qui convient le mieux est la loi de Poisson. 
+On cherche maintenant la valeur de la somme. 
+**Loi geometrique**
+
+```{r}
+liste_proba_geom <- list(0.0,0.0,0.0,0.0,0.0,0.0)
+for (i in 1:5) {
+  liste_proba_geom[i] <- dgeom(i-1, theta)
+}
+
+somme_liste <- liste_proba_geom[[1]] + liste_proba_geom[[2]] + liste_proba_geom[[3]] + liste_proba_geom[[4]] + liste_proba_geom[[5]]
+liste_proba_geom[6] <- 1.0 - somme_liste
+
+n_j <- list(0.0,0.0,0.0,0.0,0.0,0.0)
+for (i in 1:5) {
+  n_j[i] <- length(subset(discoveries, discoveries==i-1))
+}
+n_j[6] <- length(subset(discoveries, discoveries >=5))
+print(n_j)
+
+
+##Calcul de la somme
+S <- 0
+for (i in 1:6) {
+  S <- S + ((n_j[[i]]- 100*liste_proba_geom[[i]])^2)/(100*liste_proba_geom[[i]])
+}
+print(S)
+
+##Comparaison avec le quantile d'ordre alpha de la loi du Chi 2
+q <- qchisq(0.95, df = 5)
+q
+if (S>q) {
+  print('la loi geometrique ne convient pas')
+}
+```
+
+**Loi de Poisson**
+
+```{r}
+#rappel
+n_j <- list(0.0,0.0,0.0,0.0,0.0,0.0)
+for (i in 1:5) {
+  n_j[i] <- length(subset(discoveries, discoveries==i-1))
+}
+n_j[6] <- length(subset(discoveries, discoveries >=5))
+print(n_j)
+
+
+
+liste_proba_pois <- list(0.0,0.0,0.0,0.0,0.0,0.0)
+for (i in 1:5) {
+  liste_proba_pois[i] <- dpois(i-1, lambda)
+}
+
+somme_liste_tilde <- liste_proba_pois[[1]] + liste_proba_pois[[2]] + liste_proba_pois[[3]] + liste_proba_pois[[4]] + liste_proba_pois[[5]]
+liste_proba_pois[6] <- 1.0 - somme_liste_tilde
+
+
+##Calcul de la somme
+S_tilde <- 0
+for (i in 1:6) {
+  S_tilde <- S_tilde + ((n_j[[i]]- 100*liste_proba_pois[[i]])^2)/(100*liste_proba_pois[[i]])
+}
+print(S_tilde)
+
+##Comparaison avec le quantile d'ordre alpha de la loi du Chi 2
+q <- qchisq(0.95, df = 5)
+q
+if (S_tilde<q) {
+  print('la loi de Poisson convient')
+}
+```
+**Donc la loi de poisson est acceptee**
+
 
 
 ## Exercice 2 : Analyse de l'incertitude dans le modele de Poisson
@@ -153,12 +227,40 @@ Finalement : $n_0 = \lfloor \frac{s}{m} \rfloor +1$.
 ```{r}
 # rappels : m=mean(discoveries)=3.1
 print(floor(281/3.1)+1)
+
 ```
 
 
 Application numérique : il faut au moins 91 donnees pour rejeter HO. 
 
 **5.** La fonction puissance est donnee par : $\beta(\theta, \delta) = 1- R(\theta, \delta)$ pour $\theta \in \theta_1$. R est ici le risque de premiere espece (rejeter a tort $H_0$). On trace $\beta$ en fonction de $\lambda$. 
+
+```{r}
+######PLOT DE LA FONCTION PUISSANCE A CHANGER########
+
+n=length(discoveries)
+lambda=seq(3,4,0.1)
+beta=numeric(length(lambda))
+
+for (i in (1:length(lambda)))  {
+  beta[i] = 1 - ppois(c,lambda[i]*n)
+}
+plot(lambda,beta,type="n", ylim = 0:12)
+lines(smooth.spline(lambda,beta),col="red")
+
+
+beta = 1 - ppois(c,3.5*n)
+nb=n
+
+while (beta<0.9) {
+  n=n+1
+  c=qpois(y,3*n)[95]
+  beta = 1 - ppois(c,3.5*n)
+}
+
+print(n)
+```
+
 
 ## Exercice 3 (Analyse bayesienne)
 **1.** La distribution du prior conjugue d'une loi de Poisson est une distribution Gamma. 
